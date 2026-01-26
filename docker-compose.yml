@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  # This is a skeleton. Nodes (node1, node2, node3, node4) will be defined here.
+  # example-node:
+  #   image: hyperledger/besu:latest
+  #   container_name: example-node
+  #   volumes:
+  #     - ./network/config/node1.toml:/config/besu.toml
+  #     - ./network/genesis/genesis.json:/config/genesis.json
+  #     - ./network/data/node1:/var/lib/besu
+  #   command: ["--config-file=/config/besu.toml"]

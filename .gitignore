@@ -1,0 +1,25 @@
+# Besu Node Data and Logs
+network/data/
+**/data/
+**/logs/
+**/database/
+**/caches/
+
+# Private Keys and Identities (CRITICAL)
+**/key
+**/key.pub
+node-keys/
+
+# OS/IDE
+.DS_Store
+.vscode/
+.idea/
+
+# Node environment
+node_modules/
+.env
+
+# Build Artifacts
+artifacts/
+cache/
+typechain-types/
