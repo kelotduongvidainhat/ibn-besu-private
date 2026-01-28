@@ -1,12 +1,94 @@
 version: '3.8'
 
 services:
-  # This is a skeleton. Nodes (node1, node2, node3, node4) will be defined here.
-  # example-node:
-  #   image: hyperledger/besu:latest
-  #   container_name: example-node
-  #   volumes:
-  #     - ./network/config/node1.toml:/config/besu.toml
-  #     - ./network/genesis/genesis.json:/config/genesis.json
-  #     - ./network/data/node1:/var/lib/besu
-  #   command: ["--config-file=/config/besu.toml"]
+  node1:
+    image: hyperledger/besu:latest
+    container_name: node1
+    volumes:
+      - ./network/config/node1.toml:/config/besu.toml
+      - ./network/genesis/genesis.json:/config/genesis.json
+      - ./network/data/node1/key:/var/lib/besu/key
+      - ./network/data/node1/key.pub:/var/lib/besu/key.pub
+      - ./network/data/node1:/var/lib/besu
+    ports:
+      - "8545:8545"
+      - "30303:30303"
+    command: [
+      "--config-file=/config/besu.toml"
+    ]
+    networks:
+      besu-net:
+        ipv4_address: 172.16.239.11
+
+  node2:
+    image: hyperledger/besu:latest
+    container_name: node2
+    volumes:
+      - ./network/config/node2.toml:/config/besu.toml
+      - ./network/genesis/genesis.json:/config/genesis.json
+      - ./network/data/node2/key:/var/lib/besu/key
+      - ./network/data/node2/key.pub:/var/lib/besu/key.pub
+      - ./network/data/node2:/var/lib/besu
+    ports:
+      - "8546:8545"
+      - "30304:30303"
+    command: [
+      "--config-file=/config/besu.toml",
+      "--bootnodes=enode://0369ab834ebe2ccc08da73ad480495ca087f2a15186bb4ec9571a41a1c186095a58533f0229da3cefd448d11e1265cd9117591a2f4084bbaac0a4adb30ad6bb5@172.16.239.11:30303"
+    ]
+    depends_on:
+      - node1
+    networks:
+      besu-net:
+        ipv4_address: 172.16.239.12
+
+  node3:
+    image: hyperledger/besu:latest
+    container_name: node3
+    volumes:
+      - ./network/config/node3.toml:/config/besu.toml
+      - ./network/genesis/genesis.json:/config/genesis.json
+      - ./network/data/node3/key:/var/lib/besu/key
+      - ./network/data/node3/key.pub:/var/lib/besu/key.pub
+      - ./network/data/node3:/var/lib/besu
+    ports:
+      - "8547:8545"
+      - "30305:30303"
+    command: [
+      "--config-file=/config/besu.toml",
+      "--bootnodes=enode://0369ab834ebe2ccc08da73ad480495ca087f2a15186bb4ec9571a41a1c186095a58533f0229da3cefd448d11e1265cd9117591a2f4084bbaac0a4adb30ad6bb5@172.16.239.11:30303"
+    ]
+    depends_on:
+      - node1
+    networks:
+      besu-net:
+        ipv4_address: 172.16.239.13
+
+  node4:
+    image: hyperledger/besu:latest
+    container_name: node4
+    volumes:
+      - ./network/config/node4.toml:/config/besu.toml
+      - ./network/genesis/genesis.json:/config/genesis.json
+      - ./network/data/node4/key:/var/lib/besu/key
+      - ./network/data/node4/key.pub:/var/lib/besu/key.pub
+      - ./network/data/node4:/var/lib/besu
+    ports:
+      - "8548:8545"
+      - "30306:30303"
+    command: [
+      "--config-file=/config/besu.toml",
+      "--bootnodes=enode://0369ab834ebe2ccc08da73ad480495ca087f2a15186bb4ec9571a41a1c186095a58533f0229da3cefd448d11e1265cd9117591a2f4084bbaac0a4adb30ad6bb5@172.16.239.11:30303"
+    ]
+    depends_on:
+      - node1
+    networks:
+      besu-net:
+        ipv4_address: 172.16.239.14
+
+networks:
+  besu-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.239.0/24
