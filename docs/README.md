@@ -4,7 +4,7 @@ This directory contains the documentation for the private Hyperledger Besu netwo
 
 ## Structure
 
-- **[items/](./items/)**: Knowledge base for Besu concepts and configurations (e.g., Gas, Bootnodes).
+- **[items/](./items/)**: Knowledge base for Besu concepts (Gas, Bootnodes, Cryptography).
 - **[plans/](./plans/)**: Roadmaps and specific technical implementation designs.
 - **[errors/](./errors/)**: Database for encountered errors and their solutions.
 - **[logs/](./logs/)**: Storage for troubleshooting logs, performance metrics, and session records.
