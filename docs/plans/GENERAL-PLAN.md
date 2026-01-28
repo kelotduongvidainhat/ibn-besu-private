@@ -20,6 +20,6 @@ This document outlines the high-level roadmap for the **ibn-besu-private** proje
 - [ ] Connect application layer to the Besu RPC nodes.
 
 ## Phase 4: Validation & MVP Completion
-- [ ] End-to-end testing of the full stack.
-- [ ] Document common errors and operational procedures.
-- [ ] Final project summary and knowledge transfer.
+- [x] End-to-end testing of the full stack.
+- [x] Document common errors and operational procedures.
+- [x] Final project summary and knowledge transfer.

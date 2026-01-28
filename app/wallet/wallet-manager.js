@@ -13,16 +13,21 @@ class WalletManager {
 
     /**
      * Creates or retrieves a wallet by a simple alias (e.g., "Buyer", "Seller").
-     * For the MVP, we use the aliases to deterministic derive keys or 
-     * just generate new ones for the session.
+     * 
+     * TODO: In production, change this to a dynamic integration with a 
+     * real KMS (Key Management Service) or secure vault. For the MVP, 
+     * we use deterministic derivation to ensure consistency across separate script runs.
      */
     getOrCreateWallet(alias) {
         if (this.wallets.has(alias)) {
             return this.wallets.get(alias);
         }
 
-        // Creating a random wallet for the MVP session
-        const wallet = ethers.Wallet.createRandom().connect(this.provider);
+        // Deterministic seed based on alias to ensure a script run today 
+        // uses the same address as a script run tomorrow.
+        const seed = ethers.keccak256(ethers.toUtf8Bytes(alias));
+        const wallet = new ethers.Wallet(seed, this.provider);
+
         this.wallets.set(alias, wallet);
         return wallet;
     }
