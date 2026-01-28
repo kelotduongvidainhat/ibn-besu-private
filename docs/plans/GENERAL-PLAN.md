@@ -3,16 +3,16 @@
 This document outlines the high-level roadmap for the **ibn-besu-private** project, a continuation and evolution of the `ibn-fabric` stack onto Hyperledger Besu.
 
 ## Phase 1: Infrastructure & Foundation
-- [ ] Initialize project structure and documentation.
-- [ ] Setup 4-node QBFT network with Docker Compose.
-- [ ] Implement key generation and genesis block configuration.
-- [ ] Verify network health and block production.
+- [x] Initialize project structure and documentation.
+- [x] Setup 4-node QBFT network with Docker Compose.
+- [x] Implement key generation and genesis block configuration.
+- [x] Verify network health and block production.
 
 ## Phase 2: Core Logic (Smart Contracts)
-- [ ] Setup development environment (Hardhat/Foundry).
-- [ ] Develop `IbnAsset.sol` (Resource tokenization).
-- [ ] Develop `Settlement.sol` (Business logic).
-- [ ] Implement unit tests and coverage checks.
+- [x] Setup development environment (Hardhat/Foundry).
+- [x] Develop `IbnAsset.sol` (Resource tokenization).
+- [x] Develop `Settlement.sol` (Business logic).
+- [x] Implement unit tests and coverage checks.
 
 ## Phase 3: Integration (App Gateway)
 - [ ] Build the Gateway middleware using Ethers.js.
