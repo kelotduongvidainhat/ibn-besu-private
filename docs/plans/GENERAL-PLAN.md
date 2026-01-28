@@ -15,8 +15,8 @@ This document outlines the high-level roadmap for the **ibn-besu-private** proje
 - [x] Implement unit tests and coverage checks.
 
 ## Phase 3: Integration (App Gateway)
-- [ ] Build the Gateway middleware using Ethers.js.
-- [ ] Implement MVP Wallet simulation for account management.
+- [x] Build the Gateway middleware using Ethers.js.
+- [x] Implement MVP Wallet simulation for account management.
 - [ ] Connect application layer to the Besu RPC nodes.
 
 ## Phase 4: Validation & MVP Completion
