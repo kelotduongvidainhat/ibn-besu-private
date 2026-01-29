@@ -1,5 +1,6 @@
 # network/config/node4.toml
 genesis-file="/config/genesis.json"
+data-storage-format="BONSAI"
 data-path="/var/lib/besu"
 
 # Networking
@@ -16,3 +17,8 @@ host-allowlist=["*"]
 
 # Logging
 logging="INFO"
+
+# Metrics
+metrics-enabled=true
+metrics-host="0.0.0.0"
+metrics-port=9545

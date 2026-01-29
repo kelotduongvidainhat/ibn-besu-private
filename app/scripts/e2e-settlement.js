@@ -11,10 +11,18 @@ async function e2eSettlement() {
         const seller = walletManager.getOrCreateWallet("Seller");
         const amountToSettle = ethers.parseEther("500");
 
-        console.log(`\n🔹 Initial State:`);
         const asset = connection.getIbnAssetContract();
-        console.log(`   Buyer (${buyer.address}) Balance: ${ethers.formatEther(await asset.balanceOf(buyer.address))} IBNA`);
-        console.log(`   Seller (${seller.address}) Balance: ${ethers.formatEther(await asset.balanceOf(seller.address))} IBNA`);
+        const initialBuyerBal = await asset.balanceOf(buyer.address);
+        const initialSellerBal = await asset.balanceOf(seller.address);
+
+        console.log(`\n🔹 Initial State:`);
+        console.log(`   Buyer (${buyer.address}) Balance: ${ethers.formatEther(initialBuyerBal)} IBNA`);
+        console.log(`   Seller (${seller.address}) Balance: ${ethers.formatEther(initialSellerBal)} IBNA`);
+
+        if (initialBuyerBal < amountToSettle) {
+            console.warn("\n⚠️  Buyer has insufficient balance. Re-initializing demo state...");
+            throw new Error("INSUFFICIENT_BALANCE");
+        }
 
         // 2. Buyer Approves Settlement Contract
         console.log(`\n✍️  Buyer is approving Settlement contract to spend ${ethers.formatEther(amountToSettle)} IBNA...`);
@@ -37,13 +45,21 @@ async function e2eSettlement() {
         console.log(`   Buyer Balance: ${ethers.formatEther(finalBuyerBal)} IBNA`);
         console.log(`   Seller Balance: ${ethers.formatEther(finalSellerBal)} IBNA`);
 
-        if (ethers.formatEther(finalBuyerBal) === "500.0" && ethers.formatEther(finalSellerBal) === "500.0") {
+        const expectedBuyerBal = initialBuyerBal - amountToSettle;
+        const expectedSellerBal = initialSellerBal + amountToSettle;
+
+        if (finalBuyerBal === expectedBuyerBal && finalSellerBal === expectedSellerBal) {
             console.log("\n🎉 E2E SETTLEMENT VERIFIED: SUCCESS");
         } else {
             console.error("\n❌ E2E SETTLEMENT VERIFIED: FAILED (Balance mismatch)");
+            console.error(`   Expected Buyer: ${ethers.formatEther(expectedBuyerBal)}, Actual: ${ethers.formatEther(finalBuyerBal)}`);
+            console.error(`   Expected Seller: ${ethers.formatEther(expectedSellerBal)}, Actual: ${ethers.formatEther(finalSellerBal)}`);
         }
 
     } catch (error) {
+        if (error.message === "INSUFFICIENT_BALANCE") {
+            process.exit(2); // Signal for re-init
+        }
         console.error("\n💥 E2E Scenario FAILED:");
         console.error(error);
         process.exit(1);

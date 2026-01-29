@@ -17,5 +17,6 @@ This defines the maximum amount of gas that can be spent in a single block. In p
 
 ### 4. Gas in MVP Context
 For the `ibn-besu-private` MVP:
-- We will likely use a **Free Gas** model to simplify developer onboarding.
-- Monitoring gas usage remains important for performance benchmarking.
+- **Free Gas Model**: `min-gas-price` is set to `0` to simplify student onboarding.
+- **Realistic Block Limit**: Set to **30,000,000** (matching Ethereum Mainnet) to teach students the importance of contract optimization.
+- **Monitoring**: Gas usage is tracked in the Teacher Dashboard for performance benchmarking.

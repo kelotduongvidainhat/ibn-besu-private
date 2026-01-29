@@ -12,6 +12,7 @@ services:
       - ./network/data/node1:/var/lib/besu
     ports:
       - "8545:8545"
+      - "8546:8546"
       - "30303:30303"
     command: [
       "--config-file=/config/besu.toml"
@@ -30,7 +31,7 @@ services:
       - ./network/data/node2/key.pub:/var/lib/besu/key.pub
       - ./network/data/node2:/var/lib/besu
     ports:
-      - "8546:8545"
+      - "8549:8545"
       - "30304:30303"
     command: [
       "--config-file=/config/besu.toml",
@@ -85,6 +86,43 @@ services:
     networks:
       besu-net:
         ipv4_address: 172.16.239.14
+
+  explorer:
+    image: alethio/ethereum-lite-explorer:latest
+    container_name: explorer
+    environment:
+      - APP_NODE_URL=http://localhost:8545
+    ports:
+      - "4000:80"
+    networks:
+      besu-net:
+        ipv4_address: 172.16.239.20
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./network/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - "9090:9090"
+    networks:
+      besu-net:
+        ipv4_address: 172.16.239.30
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./network/monitoring/grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - "3000:3000"
+    networks:
+      besu-net:
+        ipv4_address: 172.16.239.31
 
 networks:
   besu-net:

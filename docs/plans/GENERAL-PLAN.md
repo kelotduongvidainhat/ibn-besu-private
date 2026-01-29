@@ -17,9 +17,25 @@ This document outlines the high-level roadmap for the **ibn-besu-private** proje
 ## Phase 3: Integration (App Gateway)
 - [x] Build the Gateway middleware using Ethers.js.
 - [x] Implement MVP Wallet simulation for account management.
-- [ ] Connect application layer to the Besu RPC nodes.
+- [x] Connect application layer to the Besu RPC nodes.
 
 ## Phase 4: Validation & MVP Completion
 - [x] End-to-end testing of the full stack.
 - [x] Document common errors and operational procedures.
 - [x] Final project summary and knowledge transfer.
+
+## Phase 5: Visibility & Monitoring
+- [x] Deploy a local Block Explorer (Sirato/BlockScout).
+- [x] Configure real-time metrics (Prometheus/Grafana).
+- [x] Implement Web3 event listening via WebSockets.
+## Phase 6: Management Portal (The Virtual Lab)
+- [x] Initialize Backend Server (Express/Node.js).
+- [x] Connect Database (PostgreSQL/SQLite) for Class Management.
+- [ ] Build Admin Dashboard (Teacher: Class/Classroom management).
+- [x] Build Student Portal (Identity receipt & Submission status).
+- [ ] Implement Automated Grading (On-chain monitoring).
+
+---
+### 📚 Detailed Vision
+For the full business logic and architecture of the "Virtual Lab," please refer to:
+[VIRTUAL-LAB-VISION.md](./VIRTUAL-LAB-VISION.md)

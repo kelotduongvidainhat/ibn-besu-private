@@ -19,6 +19,14 @@ class ConnectionManager {
     }
 
     /**
+     * Returns a WebSocket provider for real-time event listening.
+     */
+    getWebSocketProvider() {
+        const wsUrl = process.env.BESU_NODE1_WS_URL || "ws://localhost:8546";
+        return new ethers.WebSocketProvider(wsUrl);
+    }
+
+    /**
      * Loads the ABI from Hardhat artifacts.
      */
     getABI(contractName) {

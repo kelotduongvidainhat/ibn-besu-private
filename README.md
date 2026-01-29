@@ -19,9 +19,12 @@ To build a robust, **Private Blockchain Sandbox** based on Hyperledger Besu for 
   - **Hardhat Toolbox**: Integrated suite for Testing, Gas Reporting, and Solidity Coverage.
 
 ### C. Application & Integration Layer
+- **Deep Sea Virtual Lab**: A premium, high-contrast dark mode portal for students and teachers.
+- **Daily Rewards System**: Gamified faucet allowing students to claim 100 IBNA tokens every 24 hours.
 - **Smart Contracts**: Use cases focused on Asset Registry (`IbnAsset.sol`) and business logic orchestration (`Settlement.sol`).
-- **Connectivity**: Support for JSON-RPC over HTTP.
-- **Backend Integration**: Automated ABI and Artifact extraction logic to bridge Blockchain data with Node.js applications.
+- **Backend Integration**: Node.js API with SQLite database for student identity and session management.
+- **Storage Strategy**: High-performance **Bonsai storage format** enabled for efficient Tries.
+- **Gas Strategy**: Realistic **30,000,000 Block Gas Limit** matching Ethereum Mainnet.
 
 ## 3. Operational Workflow
 

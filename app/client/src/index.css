@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink-black: #00171f;
+  --color-deep-space-blue: #003459;
+  --color-cerulean: #007ea7;
+  --color-fresh-sky: #00a8e8;
+  --color-brand-white: #ffffff;
+}
+
+@layer base {
+  :root {
+    --white: #ffffff;
+    --ink-black: #00171f;
+    --deep-space-blue: #003459;
+    --cerulean: #007ea7;
+    --fresh-sky: #00a8e8;
+
+    /* Deep Sea Gradient */
+    --bg-surface: linear-gradient(135deg, var(--ink-black) 0%, var(--deep-space-blue) 100%);
+
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+
+    /* Text colors for dark background */
+    --text-primary: var(--white);
+    --text-secondary: rgba(255, 255, 255, 0.6);
+    --accent-color: var(--fresh-sky);
+  }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg-surface);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    min-height: 100vh;
+    @apply antialiased;
+  }
+}
+
+@layer components {
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+  }
+
+  .btn-primary {
+    background: var(--fresh-sky);
+    color: var(--ink-black);
+    @apply border-none px-6 py-3 rounded-2xl font-bold cursor-pointer transition-all duration-300 uppercase tracking-widest text-sm flex items-center justify-center shadow-lg shadow-fresh-sky/30;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 168, 232, 0.5);
+    filter: brightness(1.1);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0px);
+  }
+
+  .input-field {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    color: var(--white);
+    @apply rounded-2xl px-4 py-3 w-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-fresh-sky/50 focus:bg-white/10;
+  }
+
+  .input-field::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+/* Custom Utilities for Responsiveness */
+@layer utilities {
+  .min-height-screen {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+}
+
+/* Scrollbar for Deep Sea Theme */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--fresh-sky);
+  border-radius: 10px;
+}

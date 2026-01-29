@@ -1,0 +1,4 @@
+{
+    "APP_BASE_URL": "/",
+    "ETH_URL": "http://localhost:8545"
+}
