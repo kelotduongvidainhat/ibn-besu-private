@@ -309,6 +309,26 @@ app.post("/api/students/:mssv/claim", checkPermission, async (req, res) => {
     }
 });
 
+/**
+ * @route   POST /api/rpc/:mssv
+ * @desc    Secure JSON-RPC Proxy for Remix/MetaMask
+ */
+app.post("/api/rpc/:mssv", checkPermission, async (req, res) => {
+    try {
+        const response = await fetch(process.env.BESU_NODE1_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(req.body)
+        });
+
+        const data = await response.json();
+        res.status(response.status).json(data);
+    } catch (error) {
+        console.error("RPC Proxy error", error);
+        res.status(500).json({ error: "Cloud connection to Besu network interrupted" });
+    }
+});
+
 // Start Server
 app.listen(PORT, () => {
     console.log(`🚀 Virtual Lab API Server running on http://localhost:${PORT}`);

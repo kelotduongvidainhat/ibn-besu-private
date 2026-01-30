@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   node1:
     image: hyperledger/besu:latest
@@ -10,10 +8,6 @@ services:
       - ./network/data/node1/key:/var/lib/besu/key
       - ./network/data/node1/key.pub:/var/lib/besu/key.pub
       - ./network/data/node1:/var/lib/besu
-    ports:
-      - "8545:8545"
-      - "8546:8546"
-      - "30303:30303"
     command: [
       "--config-file=/config/besu.toml"
     ]
@@ -30,9 +24,6 @@ services:
       - ./network/data/node2/key:/var/lib/besu/key
       - ./network/data/node2/key.pub:/var/lib/besu/key.pub
       - ./network/data/node2:/var/lib/besu
-    ports:
-      - "8549:8545"
-      - "30304:30303"
     command: [
       "--config-file=/config/besu.toml",
       "--bootnodes=enode://0369ab834ebe2ccc08da73ad480495ca087f2a15186bb4ec9571a41a1c186095a58533f0229da3cefd448d11e1265cd9117591a2f4084bbaac0a4adb30ad6bb5@172.16.239.11:30303"
@@ -52,9 +43,6 @@ services:
       - ./network/data/node3/key:/var/lib/besu/key
       - ./network/data/node3/key.pub:/var/lib/besu/key.pub
       - ./network/data/node3:/var/lib/besu
-    ports:
-      - "8547:8545"
-      - "30305:30303"
     command: [
       "--config-file=/config/besu.toml",
       "--bootnodes=enode://0369ab834ebe2ccc08da73ad480495ca087f2a15186bb4ec9571a41a1c186095a58533f0229da3cefd448d11e1265cd9117591a2f4084bbaac0a4adb30ad6bb5@172.16.239.11:30303"
@@ -74,9 +62,6 @@ services:
       - ./network/data/node4/key:/var/lib/besu/key
       - ./network/data/node4/key.pub:/var/lib/besu/key.pub
       - ./network/data/node4:/var/lib/besu
-    ports:
-      - "8548:8545"
-      - "30306:30303"
     command: [
       "--config-file=/config/besu.toml",
       "--bootnodes=enode://0369ab834ebe2ccc08da73ad480495ca087f2a15186bb4ec9571a41a1c186095a58533f0229da3cefd448d11e1265cd9117591a2f4084bbaac0a4adb30ad6bb5@172.16.239.11:30303"
@@ -91,12 +76,39 @@ services:
     image: alethio/ethereum-lite-explorer:latest
     container_name: explorer
     environment:
-      - APP_NODE_URL=http://localhost:8545
+      - APP_NODE_URL=http://node1:8545
     ports:
       - "4000:80"
     networks:
       besu-net:
         ipv4_address: 172.16.239.20
+    depends_on:
+      - node1
+
+  server:
+    build: 
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: virtual-lab-api
+    environment:
+      - BESU_NODE1_URL=http://node1:8545
+      - BESU_NODE2_URL=http://node2:8545
+      - BESU_NODE1_WS_URL=ws://node1:8546
+      - IBN_ASSET_ADDRESS=0x73d932d5543dE6F8FFBE8a86dd6f698bc72Ccc5e
+      - SETTLEMENT_ADDRESS=0x071F48920Fd633e6184A483d758Ed68223eE6A60
+      - ACCOUNT_ALLOWLIST_ADDRESS=0xf1F7A697BC8d1Ca73d136f73755b0383C10A61C8
+      - ADMIN_PRIVATE_KEY=0xf95b8bbeb35662d47375fdd7e95d957b915e1bafea8fdf08e4f0ff271365b2a3
+      - PORT=5000
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app/database:/app/database
+      - ./contracts:/contracts
+    networks:
+      besu-net:
+        ipv4_address: 172.16.239.50
+    depends_on:
+      - node1
 
   prometheus:
     image: prom/prometheus:latest

@@ -355,8 +355,8 @@ function StudentPortal() {
 
                                 <div className="space-y-4">
                                     <div className="flex justify-between items-center text-xs pb-3 border-b border-white/5">
-                                        <span className="text-text-muted">RPC_ENDPOINT</span>
-                                        <span className="font-mono text-[10px] text-white">http://localhost:8545</span>
+                                        <span className="text-text-muted">SECURE_RPC</span>
+                                        <span className="font-mono text-[9px] text-biolume font-bold">http://localhost:5000/api/rpc/{student.mssv}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-xs pb-3 border-b border-white/5">
                                         <span className="text-text-muted">CHAIN_ID</span>
@@ -400,15 +400,15 @@ function StudentPortal() {
                             <ul className="space-y-3">
                                 <li className="flex items-center text-xs text-text-secondary">
                                     <div className="w-1 h-1 rounded-full bg-biolume mr-2"></div>
-                                    Remix IDE (External HTTP)
+                                    Remix IDE (Use SECURE_RPC)
                                 </li>
                                 <li className="flex items-center text-xs text-text-secondary">
                                     <div className="w-1 h-1 rounded-full bg-biolume mr-2"></div>
-                                    Hardhat / Foundry
+                                    MetaMask (Custom Network)
                                 </li>
                                 <li className="flex items-center text-xs text-text-secondary">
                                     <div className="w-1 h-1 rounded-full bg-biolume mr-2"></div>
-                                    MetaMask Mobile/Extension
+                                    <a href="http://localhost:4000" target="_blank" className="text-biolume hover:underline">Lab Explorer (Live Audit)</a>
                                 </li>
                             </ul>
                         </motion.div>

@@ -18,3 +18,4 @@
 [0mPOST /api/students/9999/claim [33m403[0m 22.045 ms - 115[0m
 [0mGET / [36m304[0m 0.756 ms - -[0m
 [0mGET /favicon.ico [33m404[0m 1.675 ms - 150[0m
+Killed

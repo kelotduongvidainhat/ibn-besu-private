@@ -35,11 +35,12 @@ This document outlines the high-level roadmap for the **ibn-besu-private** proje
 - [x] Build Student Portal (Identity receipt & Submission status).
 - [ ] Implement Automated Grading (On-chain monitoring).
 
-## Phase 7: Network Security & Permissioning
+## Phase 7: Network Security & Permissioning (COMPLETED - HARDENED)
 - [x] Deploy `AccountAllowlist.sol` Smart Contract.
 - [x] Implement "Imperial Gateway" Application-level Gatekeeper.
 - [x] Integrate Permissioning status into Admin Dashboard.
-- [x] Document v25 configuration constraints.
+- [x] **Iron Shield Upgrade**: Isolated Besu RPC ports from public host.
+- [x] Documented v25 configuration constraints and hybrid security model.
 
 ---
 ### 📚 Detailed Vision

@@ -23,18 +23,20 @@ We have deployed an on-chain contract at `0xf1F7A697BC8d1Ca73d136f73755b0383C10A
 The Node.js backend (`app/server.js`) acts as the network proxy:
 1. **Registration Flow**: When a student is created in the database, they are automatically sent to the `AccountAllowlist` contract to be whitelisted.
 2. **Transaction Middleware**: Every sensitive API call (Claim, Submit, Transfer) checks the contract status.
-   - If `contract.isAllowed(address)` is `false`, the request is rejected with `403 Forbidden`.
+3. **Identity-Aware RPC Proxy**: We implemented a secure JSON-RPC proxy at `/api/rpc/:mssv`. This allows external tools like **Remix** and **MetaMask** to connect securely. All raw JSON-RPC requests are gated by the `checkPermission` middleware.
 
-### C. Frontend Visibility (The Shield)
-The Admin Dashboard and Student Portal reflect this state:
-- **Admin**: Can see "Validated" (Green Shield) or "Blocked" (Red Shield) statuses for every MSSV.
-- **Student**: Unauthorized students see a "Restricted Access" overlay, preventing them from accessing the Faucet or Submission areas.
+### C. Network Isolation (The "Iron Shield")
+To prevent students from bypassing the gateway:
+- **Port Isolation**: Public Host ports `8545-8549` have been removed from `docker-compose.yml`.
+- **Docker Stealth**: Besu nodes are only accessible from within the internal `besu-net` Docker network. 
+- **Exclusive Bridge**: The containerized Backend API is the unique bridge between the public web and the private blockchain network.
 
 ## 4. Key Lessons (The "New Order" of Knowledge)
-- **Version Sensitivity**: Enterprise blockchain documentation lag is significant. Always probe the binary help flags (`besu --help`) before committing to a protocol configuration.
-- **Decoupling vs. Integrity**: Application-level security is often safer and cheaper to maintain than Protocol-level security in a development/educational lab, provided the Gateway remains the primary access point for students.
+- **Layered Defense**: Security is strongest when it combines On-Chain Logic (Ownership), Application-Layer Logic (Middleware), and Network-Layer Isolation (Port Blocking).
+- **Tool Compatibility**: By providing a Secure RPC Proxy, we maintain compatibility with the Ethereum ecosystem (Remix, MetaMask) while keeping the private network hidden from direct exposure.
 
 ## 5. Security Status
 - **On-chain Contract**: DEPLOYED
 - **Admin Management**: ACTIVE (Teacher can whitelist/block via UI)
-- **Besu Protocol**: NATIVE (Unrestricted to facilitate faster development debugging)
+- **Network Access**: **HARDENED** (Isolated via Iron Shield)
+- **RPC Gateway**: **SECURE** (Identity-aware proxy enabled)
