@@ -85,7 +85,20 @@ app.post("/api/students/register", async (req, res) => {
             await walletManager.fundWallet(`Student_${mssv}`, "1.0");
         }
 
-        // 4. Save to Database
+        // 4. Whitelist the student in the permissioning contract
+        console.log(`🔐 Whitelisting student: ${name} (${wallet.address})`);
+        const allowlist = connection.getAccountAllowlistContract();
+        try {
+            const tx = await allowlist.setAccountStatus(wallet.address, true);
+            await tx.wait();
+            console.log(`✅ Whitelisted in block: ${tx.blockNumber}`);
+        } catch (err) {
+            console.error("❌ Whitelisting failed", err);
+            // We might want to handle this, e.g., if permissioning is disabled or admin has no gas
+        }
+
+        // 5. Save to Database
+
         student = await Student.create({
             mssv,
             name,
@@ -139,23 +152,28 @@ app.get("/api/admin/students", async (req, res) => {
             include: [Submission]
         });
 
-        // Fetch balances for all students
+        // Fetch balances and whitelisted status for all students
         const assetContract = connection.getIbnAssetContract();
-        const studentsWithBalance = await Promise.all(students.map(async (student) => {
+        const allowlist = connection.getAccountAllowlistContract();
+        const studentsWithData = await Promise.all(students.map(async (student) => {
             try {
                 const balanceBN = await assetContract.balanceOf(student.walletAddress);
+                const isWhitelisted = await allowlist.isAllowed(student.walletAddress);
                 const studentData = student.toJSON();
                 studentData.ibnaBalance = ethers.formatUnits(balanceBN, 18);
+                studentData.isWhitelisted = isWhitelisted;
                 return studentData;
             } catch (err) {
-                console.error(`Balance fetch failed for ${student.mssv}`, err);
+                console.error(`Status fetch failed for ${student.mssv}`, err);
                 const studentData = student.toJSON();
                 studentData.ibnaBalance = "0.0";
+                studentData.isWhitelisted = false;
                 return studentData;
             }
         }));
 
-        res.json(studentsWithBalance);
+        res.json(studentsWithData);
+
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

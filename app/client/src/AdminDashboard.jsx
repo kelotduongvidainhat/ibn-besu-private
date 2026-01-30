@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { Users, BookOpen, Activity, ExternalLink, RefreshCw, CheckCircle, Clock } from 'lucide-react';
+import { Users, BookOpen, Activity, ExternalLink, RefreshCw, CheckCircle, Clock, ShieldCheck, ShieldAlert } from 'lucide-react';
 
 const API_BASE = "http://localhost:5000/api";
 
@@ -94,7 +94,7 @@ function AdminDashboard() {
                                     <th className="p-4">Student Info</th>
                                     <th className="p-4">Wallet Address</th>
                                     <th className="p-4">IBNA Assets</th>
-                                    <th className="p-4">Identity</th>
+                                    <th className="p-4">Permissioning</th>
                                     <th className="p-4">Status</th>
                                     <th className="p-4">Recent Submission</th>
                                 </tr>
@@ -114,9 +114,15 @@ function AdminDashboard() {
                                             <span className="text-[10px] ml-1 opacity-60">IBNA</span>
                                         </td>
                                         <td className="p-4">
-                                            <span className="text-[10px] px-2 py-1 rounded-full bg-fresh-sky/20 text-fresh-sky border border-fresh-sky/30 font-bold uppercase tracking-tighter">
-                                                DEEP SEA
-                                            </span>
+                                            {student.isWhitelisted ? (
+                                                <span className="text-[10px] px-2 py-1 rounded-full bg-green-500/20 text-green-400 border border-green-500/30 font-bold uppercase flex items-center w-fit">
+                                                    <ShieldCheck size={10} className="mr-1" /> Validated
+                                                </span>
+                                            ) : (
+                                                <span className="text-[10px] px-2 py-1 rounded-full bg-red-500/20 text-red-500 border border-red-500/30 font-bold uppercase flex items-center w-fit">
+                                                    <ShieldAlert size={10} className="mr-1" /> Blocked
+                                                </span>
+                                            )}
                                         </td>
                                         <td className="p-4 text-xs">
                                             {student.Submissions?.length > 0 ? (
@@ -164,9 +170,15 @@ function AdminDashboard() {
                                         <p className="font-bold text-lg">{student.name}</p>
                                         <p className="text-xs text-text-secondary">ID: {student.mssv}</p>
                                     </div>
-                                    <span className="text-[10px] px-2 py-1 rounded-full bg-fresh-sky/20 text-fresh-sky border border-fresh-sky/30 font-bold">
-                                        DEEP SEA
-                                    </span>
+                                    {student.isWhitelisted ? (
+                                        <span className="text-[10px] px-2 py-1 rounded-full bg-green-500/20 text-green-400 border border-green-500/30 font-bold flex items-center">
+                                            <ShieldCheck size={10} className="mr-1" /> VALIDATED
+                                        </span>
+                                    ) : (
+                                        <span className="text-[10px] px-2 py-1 rounded-full bg-red-500/20 text-red-500 border border-red-500/30 font-bold flex items-center">
+                                            <ShieldAlert size={10} className="mr-1" /> BLOCKED
+                                        </span>
+                                    )}
                                 </div>
                                 <div className="space-y-2">
                                     <div className="flex flex-col space-y-1">

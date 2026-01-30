@@ -50,6 +50,15 @@ class ConnectionManager {
         const abi = this.getABI("Settlement");
         return new ethers.Contract(process.env.SETTLEMENT_ADDRESS, abi, signerOrProvider);
     }
+
+    /**
+     * Returns a ready-to-use Contract instance for AccountAllowlist.
+     */
+    getAccountAllowlistContract(signerOrProvider = this.adminWallet) {
+        const abi = this.getABI("AccountAllowlist");
+        return new ethers.Contract(process.env.ACCOUNT_ALLOWLIST_ADDRESS, abi, signerOrProvider);
+    }
 }
+
 
 export const connection = new ConnectionManager();
