@@ -1,4 +1,20 @@
+
+> app@1.0.0 start
+> node server.js
+
 [dotenv@17.2.3] injecting env (7) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
-[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
 🚀 Virtual Lab API Server running on http://localhost:5000
 💾 Database connected and synced.
+💸 Funding Student_9999 (0x94b965c82AB4d52EdFaD11685335fb009D705cBB) with 1.0 ETH...
+✅ Student_9999 funded. Tx: 0x58264ada9f233127ad5faa0c031df102528a5db819d2aad53bc8206f2381cd70
+🔐 Whitelisting student: DeepSea Explorer (0x94b965c82AB4d52EdFaD11685335fb009D705cBB)
+✅ Whitelisted in block: null
+[0mPOST /api/students/register [32m200[0m 17371.861 ms - 395[0m
+[0mGET /api/admin/students [32m200[0m 119.275 ms - 2084[0m
+📡 Manual Status Change: DeepSea Explorer -> BLOCK
+[0mPOST /api/admin/students/9999/status [32m200[0m 8201.350 ms - 142[0m
+[0mGET /api/admin/students [32m200[0m 76.769 ms - 2085[0m
+[0mPOST /api/students/9999/claim [33m403[0m 22.045 ms - 115[0m
+[0mGET / [36m304[0m 0.756 ms - -[0m
+[0mGET /favicon.ico [33m404[0m 1.675 ms - 150[0m

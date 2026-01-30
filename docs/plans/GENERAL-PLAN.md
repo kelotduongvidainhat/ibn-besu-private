@@ -35,6 +35,12 @@ This document outlines the high-level roadmap for the **ibn-besu-private** proje
 - [x] Build Student Portal (Identity receipt & Submission status).
 - [ ] Implement Automated Grading (On-chain monitoring).
 
+## Phase 7: Network Security & Permissioning
+- [x] Deploy `AccountAllowlist.sol` Smart Contract.
+- [x] Implement "Imperial Gateway" Application-level Gatekeeper.
+- [x] Integrate Permissioning status into Admin Dashboard.
+- [x] Document v25 configuration constraints.
+
 ---
 ### 📚 Detailed Vision
 For the full business logic and architecture of the "Virtual Lab," please refer to:

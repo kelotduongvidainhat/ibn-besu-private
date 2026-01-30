@@ -20,6 +20,31 @@ app.use(express.json());
 // Initialize Database
 initDB();
 
+/**
+ * Middleware to check if a student is whitelisted in the AccountAllowlist contract.
+ */
+const checkPermission = async (req, res, next) => {
+    const { mssv } = req.params;
+    try {
+        const student = await Student.findOne({ where: { mssv } });
+        if (!student) return res.status(404).json({ error: "Student not found" });
+
+        const allowlist = connection.getAccountAllowlistContract();
+        const isWhitelisted = await allowlist.isAllowed(student.walletAddress);
+
+        if (!isWhitelisted) {
+            return res.status(403).json({
+                error: "Access Denied",
+                message: "Your account is not whitelisted in the Imperial Lab. Contact your instructor."
+            });
+        }
+        next();
+    } catch (err) {
+        console.error("Permission check failed", err);
+        res.status(500).json({ error: "Internal security verification failed" });
+    }
+};
+
 app.get("/", (req, res) => {
     res.json({
         message: "Welcome to the Imperial Virtual Lab API",
@@ -180,10 +205,39 @@ app.get("/api/admin/students", async (req, res) => {
 });
 
 /**
+ * @route   POST /api/admin/students/:mssv/status
+ * @desc    Toggle whitelisting status (Teacher Only)
+ */
+app.post("/api/admin/students/:mssv/status", async (req, res) => {
+    const { mssv } = req.params;
+    const { status } = req.body; // boolean
+
+    try {
+        const student = await Student.findOne({ where: { mssv } });
+        if (!student) return res.status(404).json({ error: "Student not found" });
+
+        console.log(`📡 Manual Status Change: ${student.name} -> ${status ? 'WHITELIST' : 'BLOCK'}`);
+        const allowlist = connection.getAccountAllowlistContract();
+
+        const tx = await allowlist.setAccountStatus(student.walletAddress, status);
+        await tx.wait();
+
+        res.json({
+            message: `Student ${status ? 'whitelisted' : 'blocked'} successfully`,
+            isWhitelisted: status,
+            txHash: tx.hash
+        });
+    } catch (error) {
+        console.error("Status toggle failed", error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/**
  * @route   POST /api/students/:mssv/submit
  * @desc    Student submits their deployed contract address
  */
-app.post("/api/students/:mssv/submit", async (req, res) => {
+app.post("/api/students/:mssv/submit", checkPermission, async (req, res) => {
     const { mssv } = req.params;
     const { contractAddress, txHash } = req.body;
 
@@ -212,7 +266,7 @@ app.post("/api/students/:mssv/submit", async (req, res) => {
  * @route   POST /api/students/:mssv/claim
  * @desc    Claim daily reward (100 IBNA)
  */
-app.post("/api/students/:mssv/claim", async (req, res) => {
+app.post("/api/students/:mssv/claim", checkPermission, async (req, res) => {
     const { mssv } = req.params;
 
     try {
