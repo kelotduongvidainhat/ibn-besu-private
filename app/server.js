@@ -104,10 +104,10 @@ app.post("/api/students/register", async (req, res) => {
         // 2. Create new blockchain identity
         const wallet = walletManager.getOrCreateWallet(`Student_${mssv}`);
 
-        // 3. Fund with gas if needed
+        // 3. Fund with gas (100 ETH for starting)
         const balance = await connection.provider.getBalance(wallet.address);
         if (balance === 0n) {
-            await walletManager.fundWallet(`Student_${mssv}`, "1.0");
+            await walletManager.fundWallet(`Student_${mssv}`, "100.0");
         }
 
         // 4. Whitelist the student in the permissioning contract
@@ -146,7 +146,7 @@ app.post("/api/students/register", async (req, res) => {
 
 /**
  * @route   GET /api/students/:mssv/balance
- * @desc    Fetch student's IBNA balance
+ * @desc    Fetch student's ETH balance
  */
 app.get("/api/students/:mssv/balance", async (req, res) => {
     const { mssv } = req.params;
@@ -154,12 +154,11 @@ app.get("/api/students/:mssv/balance", async (req, res) => {
         const student = await Student.findOne({ where: { mssv } });
         if (!student) return res.status(404).json({ error: "Student not found" });
 
-        const assetContract = connection.getIbnAssetContract();
-        const balanceBN = await assetContract.balanceOf(student.walletAddress);
+        const balanceBN = await connection.provider.getBalance(student.walletAddress);
 
         res.json({
             mssv,
-            balance: ethers.formatUnits(balanceBN, 18),
+            balance: ethers.formatEther(balanceBN),
             walletAddress: student.walletAddress
         });
     } catch (error) {
@@ -178,20 +177,19 @@ app.get("/api/admin/students", async (req, res) => {
         });
 
         // Fetch balances and whitelisted status for all students
-        const assetContract = connection.getIbnAssetContract();
         const allowlist = connection.getAccountAllowlistContract();
         const studentsWithData = await Promise.all(students.map(async (student) => {
             try {
-                const balanceBN = await assetContract.balanceOf(student.walletAddress);
+                const balanceBN = await connection.provider.getBalance(student.walletAddress);
                 const isWhitelisted = await allowlist.isAllowed(student.walletAddress);
                 const studentData = student.toJSON();
-                studentData.ibnaBalance = ethers.formatUnits(balanceBN, 18);
+                studentData.ethBalance = ethers.formatEther(balanceBN);
                 studentData.isWhitelisted = isWhitelisted;
                 return studentData;
             } catch (err) {
                 console.error(`Status fetch failed for ${student.mssv}`, err);
                 const studentData = student.toJSON();
-                studentData.ibnaBalance = "0.0";
+                studentData.ethBalance = "0.0";
                 studentData.isWhitelisted = false;
                 return studentData;
             }
@@ -221,7 +219,6 @@ app.post("/api/admin/students/:mssv/status", async (req, res) => {
 
         const tx = await allowlist.setAccountStatus(student.walletAddress, status);
         await tx.wait();
-
         res.json({
             message: `Student ${status ? 'whitelisted' : 'blocked'} successfully`,
             isWhitelisted: status,
@@ -229,6 +226,39 @@ app.post("/api/admin/students/:mssv/status", async (req, res) => {
         });
     } catch (error) {
         console.error("Status toggle failed", error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/**
+ * @route   POST /api/admin/distribute-rewards
+ * @desc    Send 50 ETH daily reward to all registered students (Teacher Only)
+ */
+app.post("/api/admin/distribute-rewards", async (req, res) => {
+    try {
+        const students = await Student.findAll();
+        console.log(`🎁 ADMIN: Bulk distributing rewards to ${students.length} students...`);
+
+        const results = [];
+        for (const student of students) {
+            try {
+                // We bypass the 24h cooldown for admin-triggered bulk payments
+                const tx = await walletManager.fundWallet(`Student_${student.mssv}`, "50.0");
+                student.lastClaimedAt = new Date();
+                await student.save();
+                results.push({ mssv: student.mssv, status: "SUCCESS", txHash: tx.hash });
+            } catch (err) {
+                console.error(`❌ Failed to fund student ${student.mssv}`, err);
+                results.push({ mssv: student.mssv, status: "FAILED", error: err.message });
+            }
+        }
+
+        res.json({
+            message: `Distributed rewards to ${results.filter(r => r.status === "SUCCESS").length} students.`,
+            results
+        });
+    } catch (error) {
+        console.error("Bulk distribution failed", error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -264,7 +294,7 @@ app.post("/api/students/:mssv/submit", checkPermission, async (req, res) => {
 
 /**
  * @route   POST /api/students/:mssv/claim
- * @desc    Claim daily reward (100 IBNA)
+ * @desc    Claim daily reward (50 ETH)
  */
 app.post("/api/students/:mssv/claim", checkPermission, async (req, res) => {
     const { mssv } = req.params;
@@ -286,26 +316,55 @@ app.post("/api/students/:mssv/claim", checkPermission, async (req, res) => {
             });
         }
 
-        // Mint 100 IBNA
-        const assetContract = connection.getIbnAssetContract();
-        const amount = ethers.parseUnits("100", 18);
+        // Send 50 ETH as daily reward
+        console.log(`🎁 Sending daily reward to ${student.name} (${student.walletAddress})`);
+        const tx = await walletManager.fundWallet(`Student_${mssv}`, "50.0");
 
-        console.log(`🎁 Daily Reward: Minting 100 IBNA for ${student.name} (${student.walletAddress})`);
-        const tx = await assetContract.mint(student.walletAddress, amount);
-        await tx.wait();
-
-        // Update DB
-        student.lastClaimedAt = now;
+        student.lastClaimedAt = new Date();
         await student.save();
 
         res.json({
-            message: "Daily reward claimed! 100 IBNA minted.",
+            message: "Daily reward claimed! 50 ETH received.",
             txHash: tx.hash,
             lastClaimedAt: student.lastClaimedAt
         });
     } catch (error) {
         console.error("Claim error", error);
         res.status(500).json({ error: error.message });
+    }
+});
+
+/**
+ * @route   POST /api/rpc/public
+ * @desc    Read-only RPC Proxy for Block Explorer
+ */
+const PUBLIC_METHODS = [
+    'eth_blockNumber', 'eth_getBlockByNumber', 'eth_getBlockByHash',
+    'eth_getTransactionByHash', 'eth_getTransactionReceipt',
+    'eth_getBalance', 'eth_getCode', 'eth_getStorageAt',
+    'eth_getTransactionCount', 'eth_getLogs', 'eth_chainId', 'net_version',
+    'eth_getBlockTransactionCountByNumber', 'eth_getBlockTransactionCountByHash'
+];
+
+app.post("/api/rpc/public", async (req, res) => {
+    const { method } = req.body;
+
+    if (!PUBLIC_METHODS.includes(method)) {
+        console.warn(`🛡️ PUBLIC_PROXY: Blocked restricted method [${method}]`);
+        return res.status(403).json({ error: "Permission denied: Method restricted on public gateway" });
+    }
+
+    try {
+        const response = await fetch(process.env.BESU_NODE1_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(req.body)
+        });
+
+        const data = await response.json();
+        res.status(response.status).json(data);
+    } catch (error) {
+        res.status(500).json({ error: "Public RPC Proxy error" });
     }
 });
 
@@ -322,6 +381,7 @@ app.post("/api/rpc/:mssv", checkPermission, async (req, res) => {
         });
 
         const data = await response.json();
+        console.log(`📡 RPC_PROXY: [${req.body.method}] Status: ${response.status} Result: ${data.result ? "SUCCESS" : "ERROR"}`);
         res.status(response.status).json(data);
     } catch (error) {
         console.error("RPC Proxy error", error);

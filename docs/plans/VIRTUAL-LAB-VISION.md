@@ -19,7 +19,7 @@ The system is divided into 3 tightly integrated layers:
 - Acts as the "Bridge" and "Classroom Manager" with a high-contrast dark theme.
 - **Identity Management**: Mapping Student IDs $\leftrightarrow$ Blockchain Wallets (0x...).
 - **Resource Allocation**: Automatic wallet generation and provisioning (funding).
-- **Daily Rewards**: Gamified faucet (100 IBNA/day) to encourage daily engagement.
+- **Daily Rewards**: Gamified faucet (50 ETH/day) to encourage daily engagement.
 - **Live Asset Monitoring**: Real-time balance tracking for all students in the Admin Manifest.
 - **Visualization**: Teacher Dashboards, Class summaries, and grading lists.
 

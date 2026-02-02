@@ -76,7 +76,7 @@ services:
     image: alethio/ethereum-lite-explorer:latest
     container_name: explorer
     environment:
-      - APP_NODE_URL=http://node1:8545
+      - APP_NODE_URL=http://localhost:5000/api/rpc/public
     ports:
       - "4000:80"
     networks:
@@ -94,9 +94,9 @@ services:
       - BESU_NODE1_URL=http://node1:8545
       - BESU_NODE2_URL=http://node2:8545
       - BESU_NODE1_WS_URL=ws://node1:8546
-      - IBN_ASSET_ADDRESS=0x73d932d5543dE6F8FFBE8a86dd6f698bc72Ccc5e
-      - SETTLEMENT_ADDRESS=0x071F48920Fd633e6184A483d758Ed68223eE6A60
-      - ACCOUNT_ALLOWLIST_ADDRESS=0xf1F7A697BC8d1Ca73d136f73755b0383C10A61C8
+      - IBN_ASSET_ADDRESS=0x828658B82A7ACdefB8c38D8Fe37960c65084A54d
+      - SETTLEMENT_ADDRESS=0x0072064eBaA81ADA7e16Dc689C5D93cd310642c6
+      - ACCOUNT_ALLOWLIST_ADDRESS=0x9A5b83e4AF4f5134eE5f5Dd83F646Fe38543F1D9
       - ADMIN_PRIVATE_KEY=0xf95b8bbeb35662d47375fdd7e95d957b915e1bafea8fdf08e4f0ff271365b2a3
       - PORT=5000
     ports:

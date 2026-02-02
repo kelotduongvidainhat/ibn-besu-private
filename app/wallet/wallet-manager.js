@@ -48,6 +48,7 @@ class WalletManager {
 
         await tx.wait();
         console.log(`✅ ${alias} funded. Tx: ${tx.hash}`);
+        return tx;
     }
 }
 

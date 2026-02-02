@@ -23,6 +23,21 @@ function AdminDashboard() {
         }
     };
 
+    const handleDistributeRewards = async () => {
+        if (!window.confirm("Distribute 50 ETH daily rewards to all students?")) return;
+        setLoading(true);
+        try {
+            const res = await axios.post(`${API_BASE}/admin/distribute-rewards`);
+            alert(`✅ ${res.data.message}`);
+            fetchData();
+        } catch (err) {
+            console.error("Distribution error", err);
+            alert("Reward distribution failed: " + (err.response?.data?.error || err.message));
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const fetchData = async () => {
         setLoading(true);
         try {
@@ -60,9 +75,14 @@ function AdminDashboard() {
                         <p className="text-[10px] text-biolume font-bold tracking-[0.2em] uppercase opacity-60">Admin Manifest</p>
                     </div>
                 </div>
-                <button onClick={fetchData} className="biolume-btn flex items-center h-10 px-6 text-[10px]">
-                    <RefreshCw size={14} className={`mr-2 ${loading ? 'animate-spin' : ''}`} /> Sync Data
-                </button>
+                <div className="flex items-center space-x-3">
+                    <button onClick={handleDistributeRewards} className="bg-cerulean/20 text-cerulean hover:bg-cerulean/30 border border-cerulean/30 flex items-center h-10 px-6 text-[10px] font-black uppercase rounded-lg transition-all tracking-widest">
+                        <CheckCircle size={14} className="mr-2" /> Pay All Rewards
+                    </button>
+                    <button onClick={fetchData} className="biolume-btn flex items-center h-10 px-6 text-[10px]">
+                        <RefreshCw size={14} className={`mr-2 ${loading ? 'animate-spin' : ''}`} /> Sync Data
+                    </button>
+                </div>
             </header>
 
             <main className="max-w-7xl mx-auto space-y-8">
@@ -112,7 +132,7 @@ function AdminDashboard() {
                                 <tr className="bg-white/5 text-xs uppercase tracking-widest text-text-secondary font-bold">
                                     <th className="p-4">Student Info</th>
                                     <th className="p-4">Wallet Address</th>
-                                    <th className="p-4">IBNA Assets</th>
+                                    <th className="p-4">ETH Assets</th>
                                     <th className="p-4">Permissioning</th>
                                     <th className="p-4">Status</th>
                                     <th className="p-4">Recent Submission</th>
@@ -129,8 +149,8 @@ function AdminDashboard() {
                                             <code className="text-[10px] bg-black/20 p-1 px-2 rounded font-mono">{student.walletAddress}</code>
                                         </td>
                                         <td className="p-4">
-                                            <span className="text-sm font-bold text-fresh-sky">{student.ibnaBalance || '0.0'}</span>
-                                            <span className="text-[10px] ml-1 opacity-60">IBNA</span>
+                                            <span className="text-sm font-bold text-fresh-sky">{student.ethBalance || '0.0'}</span>
+                                            <span className="text-[10px] ml-1 opacity-60">ETH</span>
                                         </td>
                                         <td className="p-4">
                                             <button
@@ -225,8 +245,8 @@ function AdminDashboard() {
                                     <div className="flex flex-col space-y-1">
                                         <span className="text-[10px] uppercase text-text-secondary font-bold">Assets</span>
                                         <div className="flex items-baseline space-x-1">
-                                            <span className="text-xl font-bold text-fresh-sky">{student.ibnaBalance || '0.0'}</span>
-                                            <span className="text-xs opacity-60 font-bold">IBNA</span>
+                                            <span className="text-xl font-bold text-fresh-sky">{student.ethBalance || '0.0'}</span>
+                                            <span className="text-xs opacity-60 font-bold">ETH</span>
                                         </div>
                                     </div>
                                     <div className="flex justify-between items-center bg-white/5 p-3 rounded-lg">

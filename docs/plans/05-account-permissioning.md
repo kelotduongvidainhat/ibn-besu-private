@@ -14,7 +14,7 @@ In our "New Order" research, we identified that:
 ## 3. The "Imperial Gateway" Strategy
 
 ### A. The Source of Truth: `AccountAllowlist.sol`
-We have deployed an on-chain contract at `0xf1F7A697BC8d1Ca73d136f73755b0383C10A61C8`.
+We have deployed an on-chain contract at `0x9A5b83e4AF4f5134eE5f5Dd83F646Fe38543F1D9`.
 - It maintains a mapping: `address => bool isAllowed`.
 - Controlled by an `onlyOwner` modifier (Teacher/Admin).
 - Transactions are documented on-chain, providing an audit trail of who was granted access.
@@ -30,6 +30,12 @@ To prevent students from bypassing the gateway:
 - **Port Isolation**: Public Host ports `8545-8549` have been removed from `docker-compose.yml`.
 - **Docker Stealth**: Besu nodes are only accessible from within the internal `besu-net` Docker network. 
 - **Exclusive Bridge**: The containerized Backend API is the unique bridge between the public web and the private blockchain network.
+
+### D. The "Public View" Gateway (RPC Proxy)
+To maintain the functionality of public tools like the **Blockchain Explorer** without exposing the nodes, we implemented a read-only Public RPC Proxy at `/api/rpc/public`.
+- **Whitelisted Methods**: Only safe, non-mutating methods (e.g., `eth_blockNumber`, `eth_getTransactionByHash`) are allowed.
+- **Access Control**: Publicly reachable, but blocks all administrative or transaction-signing commands.
+- **Anonymity**: Allows the Explorer to query blocks without requiring student authentication.
 
 ## 4. Key Lessons (The "New Order" of Knowledge)
 - **Layered Defense**: Security is strongest when it combines On-Chain Logic (Ownership), Application-Layer Logic (Middleware), and Network-Layer Isolation (Port Blocking).

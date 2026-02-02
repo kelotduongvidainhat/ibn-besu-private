@@ -39,9 +39,9 @@ curl -X POST --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id
 ## 🛠️ Application Layer
 
 ### Bootstrap Demo State
-Generates Buyer/Seller, funds them with ETH, and mints initial IBNA assets.
+Generates students, funds them with ETH, and initializes the lab ecosystem.
 ```bash
-cd app && node scripts/init-demo.js
+cd app && node scripts/bulk-init.js
 ```
 
 ### Run E2E Settlement Test

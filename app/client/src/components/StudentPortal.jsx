@@ -83,7 +83,7 @@ function StudentPortal() {
             await axios.post(`${API_BASE}/students/${student.mssv}/claim`);
             const balanceRes = await axios.get(`${API_BASE}/students/${student.mssv}/balance`);
             setBalance(balanceRes.data.balance);
-            alert("✅ Reward Claimed! 100 IBNA tokens added to your vault.");
+            alert("✅ Reward Claimed! 10 ETH added to your vault.");
         } catch (err) {
             alert(err.response?.data?.error || "Claim failed.");
         } finally {
@@ -233,7 +233,7 @@ function StudentPortal() {
                                     </div>
                                     <div className="flex items-baseline space-x-3">
                                         <span className="text-4xl font-black text-white glow-text">{balance}</span>
-                                        <span className="text-xs font-black text-biolume uppercase tracking-widest opacity-60 italic">IBNA</span>
+                                        <span className="text-xs font-black text-biolume uppercase tracking-widest opacity-60 italic">ETH</span>
                                     </div>
                                 </div>
 
@@ -264,14 +264,14 @@ function StudentPortal() {
                             <Gift size={16} className="text-biolume" />
                         </div>
                         <p className="text-xs font-light text-text-secondary leading-relaxed mb-6">
-                            Students receive a base allowance of <span className="text-white font-bold">100 IBNA</span> daily to power their smart contract experiments.
+                            Students receive a base allowance of <span className="text-white font-bold">50 ETH</span> daily to power their smart contract experiments.
                         </p>
                         <button
                             onClick={handleClaim}
                             disabled={loading || !isWhitelisted}
                             className="biolume-btn w-full h-12"
                         >
-                            {loading ? "MINING..." : "CLAIM DAILY IBNA"}
+                            {loading ? "MINING..." : "CLAIM DAILY ETH"}
                         </button>
                         {!isWhitelisted && (
                             <p className="text-[10px] text-red-400/60 mt-4 text-center italic">
