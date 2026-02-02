@@ -23,7 +23,7 @@ To build a robust, **Private Blockchain Sandbox** based on Hyperledger Besu for 
 - **Pure ETH Economy**: Simplified financial model using native ETH for all transactions, rewards, and gas.
 - **Daily Rewards System**: Gamified faucet allowing students to claim 50 ETH every 24 hours (with an initial 100 ETH startup fund).
 - **Security Logic**: A custom `AccountAllowlist.sol` contract and Secure Gateway enforce student identities and network access.
-- **Backend Integration**: Node.js API with SQLite database for student identity and session management.
+- **Backend Integration**: Node.js API with custom [Hybrid SQLite/Blockchain Schema](./docs/items/data-schema.md) for student identity and session management.
 - **Storage Strategy**: High-performance **Bonsai storage format** enabled for efficient Tries.
 - **Gas Strategy**: Realistic **30,000,000 Block Gas Limit** matching Ethereum Mainnet.
 

@@ -50,6 +50,7 @@ The system is divided into 3 tightly integrated layers:
 - **Hybrid Data Storage**:
     - **Off-chain (Database)**: Student names, IDs, Web logs, performance scores.
     - **On-chain (Besu)**: Transaction hashes, Contract addresses, balances, and Event logs.
+    - *Full technical breakdown available in [Data Schema](../items/data-schema.md).*
 
 ---
 
