@@ -14,7 +14,7 @@ In our "New Order" research, we identified that:
 ## 3. The "Imperial Gateway" Strategy
 
 ### A. The Source of Truth: `AccountAllowlist.sol`
-We have deployed an on-chain contract at `0x9A5b83e4AF4f5134eE5f5Dd83F646Fe38543F1D9`.
+We have deployed an on-chain contract at `0x509b672ab6b42d1bf0688ef3eed80ab4e0384c05`.
 - It maintains a mapping: `address => bool isAllowed`.
 - Controlled by an `onlyOwner` modifier (Teacher/Admin).
 - Transactions are documented on-chain, providing an audit trail of who was granted access.

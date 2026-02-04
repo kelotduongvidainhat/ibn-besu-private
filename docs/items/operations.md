@@ -14,9 +14,11 @@ docker-compose up -d
 docker-compose stop
 ```
 
-### Stop and Wipe Everything (Reset State)
+### Stop and Wipe Everything (Full Reset)
+**WARNING**: This deletes the blockchain and the student database.
 ```bash
 docker-compose down -v
+rm app/database/lab.sqlite
 ```
 
 ## 📊 Monitoring & Logs
@@ -26,30 +28,47 @@ docker-compose down -v
 docker logs -f node1
 ```
 
-### Check Peer Count (via Node 1)
+### Check Peer Count (via Imperial Gateway)
 ```bash
-curl -X POST --data '{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":1}' localhost:8545
+curl -X POST -H "Content-Type: application/json" \
+--data '{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":1}' \
+localhost:5000/api/rpc/public
 ```
 
 ### Check Block Height
 ```bash
-curl -X POST --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' localhost:8545
+curl -X POST -H "Content-Type: application/json" \
+--data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' \
+localhost:5000/api/rpc/public
 ```
 
 ## 🛠️ Application Layer
 
-### Bootstrap Demo State
-Generates students, funds them with ETH, and initializes the lab ecosystem.
+### Bootstrap / Restore State
+If the network is reset, you must re-register the authorized students to link them to the new chain security contract.
 ```bash
-cd app && node scripts/bulk-init.js
+cd app && node scripts/register-students.js
 ```
 
-### Run E2E Settlement Test
-Executes the cross-party approval and settlement workflow.
-```bash
-cd app && node scripts/e2e-settlement.js
-```
+## 🚑 Disaster Recovery (Protocol Upgrade/Broken Consensus)
+
+If the nodes fail to produce blocks or protocols are mismatched:
+
+1.  **Wipe All State**:
+    ```bash
+    docker-compose down -v
+    rm app/database/lab.sqlite
+    # Manually clear host-mounted database folders if permission allows:
+    # docker run --rm -v $(pwd)/network/data:/data alpine sh -c "rm -rf /data/*/database"
+    ```
+2.  **Verify Genesis**: Ensure `network/genesis/genesis.json` has correct fork blocks (e.g., `cancunblock: 0`).
+3.  **Deploy Security**:
+    ```bash
+    cd contracts && npx hardhat run scripts/deploy-permissioning.js --network besu
+    ```
+4.  **Update Config**: Copy the new address into `app/.env` and `docker-compose.yml`.
+5.  **Re-Register**: Run the restoration script in the Application Layer section.
 
 ## 🔐 Security Notes
-- **Private Keys**: Stored in `network/data/node{X}/key` and `app/.env`. 
-- **TODO**: Transition `app/wallet/wallet-manager.js` to a proper KMS/Vault for production use.
+- **Iron Shield**: Direct access to Besu nodes (8545) is disabled. All traffic MUST pass through the identity-aware proxy on port **5000**.
+- **Static Nodes**: Discovery is handled via `network/config/static-nodes.json` to ensure stability in containerized environments.

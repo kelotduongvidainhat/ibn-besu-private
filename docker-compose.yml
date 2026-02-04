@@ -8,6 +8,7 @@ services:
       - ./network/data/node1/key:/var/lib/besu/key
       - ./network/data/node1/key.pub:/var/lib/besu/key.pub
       - ./network/data/node1:/var/lib/besu
+      - ./network/config/static-nodes.json:/var/lib/besu/static-nodes.json
     command: [
       "--config-file=/config/besu.toml"
     ]
@@ -24,12 +25,10 @@ services:
       - ./network/data/node2/key:/var/lib/besu/key
       - ./network/data/node2/key.pub:/var/lib/besu/key.pub
       - ./network/data/node2:/var/lib/besu
+      - ./network/config/static-nodes.json:/var/lib/besu/static-nodes.json
     command: [
-      "--config-file=/config/besu.toml",
-      "--bootnodes=enode://0369ab834ebe2ccc08da73ad480495ca087f2a15186bb4ec9571a41a1c186095a58533f0229da3cefd448d11e1265cd9117591a2f4084bbaac0a4adb30ad6bb5@172.16.239.11:30303"
+      "--config-file=/config/besu.toml"
     ]
-    depends_on:
-      - node1
     networks:
       besu-net:
         ipv4_address: 172.16.239.12
@@ -43,12 +42,10 @@ services:
       - ./network/data/node3/key:/var/lib/besu/key
       - ./network/data/node3/key.pub:/var/lib/besu/key.pub
       - ./network/data/node3:/var/lib/besu
+      - ./network/config/static-nodes.json:/var/lib/besu/static-nodes.json
     command: [
-      "--config-file=/config/besu.toml",
-      "--bootnodes=enode://0369ab834ebe2ccc08da73ad480495ca087f2a15186bb4ec9571a41a1c186095a58533f0229da3cefd448d11e1265cd9117591a2f4084bbaac0a4adb30ad6bb5@172.16.239.11:30303"
+      "--config-file=/config/besu.toml"
     ]
-    depends_on:
-      - node1
     networks:
       besu-net:
         ipv4_address: 172.16.239.13
@@ -62,41 +59,22 @@ services:
       - ./network/data/node4/key:/var/lib/besu/key
       - ./network/data/node4/key.pub:/var/lib/besu/key.pub
       - ./network/data/node4:/var/lib/besu
+      - ./network/config/static-nodes.json:/var/lib/besu/static-nodes.json
     command: [
-      "--config-file=/config/besu.toml",
-      "--bootnodes=enode://0369ab834ebe2ccc08da73ad480495ca087f2a15186bb4ec9571a41a1c186095a58533f0229da3cefd448d11e1265cd9117591a2f4084bbaac0a4adb30ad6bb5@172.16.239.11:30303"
+      "--config-file=/config/besu.toml"
     ]
-    depends_on:
-      - node1
     networks:
       besu-net:
         ipv4_address: 172.16.239.14
 
-  explorer:
-    image: alethio/ethereum-lite-explorer:latest
-    container_name: explorer
-    environment:
-      - APP_NODE_URL=http://localhost:5000/api/rpc/public
-    ports:
-      - "4000:80"
-    networks:
-      besu-net:
-        ipv4_address: 172.16.239.20
-    depends_on:
-      - node1
-
-  server:
-    build: 
-      context: ./app
-      dockerfile: Dockerfile
+  virtual-lab-api:
+    image: ibn-besu-private-server
     container_name: virtual-lab-api
     environment:
       - BESU_NODE1_URL=http://node1:8545
-      - BESU_NODE2_URL=http://node2:8545
       - BESU_NODE1_WS_URL=ws://node1:8546
-      - IBN_ASSET_ADDRESS=0x828658B82A7ACdefB8c38D8Fe37960c65084A54d
       - SETTLEMENT_ADDRESS=0x0072064eBaA81ADA7e16Dc689C5D93cd310642c6
-      - ACCOUNT_ALLOWLIST_ADDRESS=0x9A5b83e4AF4f5134eE5f5Dd83F646Fe38543F1D9
+      - ACCOUNT_ALLOWLIST_ADDRESS=0x509b672ab6b42d1bf0688ef3eed80ab4e0384c05
       - ADMIN_PRIVATE_KEY=0xf95b8bbeb35662d47375fdd7e95d957b915e1bafea8fdf08e4f0ff271365b2a3
       - PORT=5000
     ports:
@@ -110,31 +88,37 @@ services:
     depends_on:
       - node1
 
+  explorer:
+    image: alethio/ethereum-lite-explorer:latest
+    container_name: explorer
+    environment:
+      - APP_NODE_URL=http://localhost:5000/api/rpc/public
+    ports:
+      - "4000:80"
+    networks:
+      - besu-net
+
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
     volumes:
-      - ./network/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
+      - ./network/monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
     networks:
-      besu-net:
-        ipv4_address: 172.16.239.30
+      - besu-net
 
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
-    volumes:
-      - ./network/monitoring/grafana/provisioning:/etc/grafana/provisioning
     ports:
       - "3000:3000"
+    volumes:
+      - ./network/monitoring/grafana/provisioning/:/etc/grafana/provisioning/
     networks:
-      besu-net:
-        ipv4_address: 172.16.239.31
+      - besu-net
 
 networks:
   besu-net:

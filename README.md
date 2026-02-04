@@ -20,10 +20,10 @@ To build a robust, **Private Blockchain Sandbox** based on Hyperledger Besu for 
 
 ### C. Application & Integration Layer
 - **Deep Sea Virtual Lab**: A premium, high-contrast dark mode portal for students and teachers.
-- **Pure ETH Economy**: Simplified financial model using native ETH for all transactions, rewards, and gas.
+- **Pure ETH Economy**: Modern financial model using native ETH supporting **EIP-1559** and the **Cancun fork**.
 - **Daily Rewards System**: Gamified faucet allowing students to claim 50 ETH every 24 hours (with an initial 100 ETH startup fund).
-- **Security Logic**: A custom `AccountAllowlist.sol` contract and Secure Gateway enforce student identities and network access.
-- **Backend Integration**: Node.js API with custom [Hybrid SQLite/Blockchain Schema](./docs/items/data-schema.md) for student identity and session management.
+- **Imperial Gateway**: Secure RPC Proxy serving as an "Iron Shield" for the private network (Port 5000).
+- **Backend Integration**: Node.js API with custom [Hybrid SQLite/Blockchain Schema](./docs/items/data-schema.md) for identity management.
 - **Storage Strategy**: High-performance **Bonsai storage format** enabled for efficient Tries.
 - **Gas Strategy**: Realistic **30,000,000 Block Gas Limit** matching Ethereum Mainnet.
 
@@ -32,7 +32,7 @@ To build a robust, **Private Blockchain Sandbox** based on Hyperledger Besu for 
 ### Administrator Phase (Your Role):
 1. **Deploy**: Use Docker Compose to launch the 4-node cluster.
 2. **Initialize**: Manage the Genesis file and node identities.
-3. **Expose**: Provide students with RPC endpoints (e.g., `http://localhost:8545`).
+3. **Expose**: Provide students with Secure RPC endpoints (e.g., `http://localhost:5000/api/rpc/:mssv`).
 
 ### Student Phase (Development):
 1. **Connect**: Link MetaMask or Remix IDE to the provided RPC endpoint.

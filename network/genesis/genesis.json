@@ -3,6 +3,10 @@
     "chainId": 1337,
     "petersburgblock": 0,
     "istanbulblock": 0,
+    "berlinblock": 0,
+    "londonblock": 0,
+    "shanghaiblock": 0,
+    "cancunblock": 0,
     "qbft": {
       "blockperiodseconds": 2,
       "epochlength": 30000,
