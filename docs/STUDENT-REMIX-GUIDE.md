@@ -41,38 +41,45 @@ MetaMask is the bridge between your browser and the blockchain.
 
 ---
 
-## 3. Connect Remix IDE
-1. Open [Remix IDE](https://remix.ethereum.org/).
-2. In the left sidebar, click the **"Deploy & Run Transactions"** icon (the Ethereum logo).
-3. Change the **Environment** dropdown to **"Injected Provider - MetaMask"**.
-4. MetaMask will pop up; select your student account and click **Connect**.
-5. Your account address and balance should now be visible in Remix.
+## ⚠️ 3. CRITICAL: Clear Activity After Network Reset
+If your teacher resets the lab network, your MetaMask will get "out of sync" and your transactions will stay **Pending** forever. **Do this every time a new lab starts:**
+1. Open **MetaMask** -> **Settings** -> **Advanced**.
+2. Scroll down and click **"Clear activity tab data"** (or "Reset Account").
+3. This resets your transaction counter (nonce) so you can talk to the fresh blockchain.
 
 ---
 
-## 4. Deploy Your First Contract
-1. Go to the **File Explorer** (top left) and create a new file named `LabExperiment.sol`.
-2. Paste your Solidity code and **Compile** it (middle icon in sidebar).
-3. Go back to the **Deploy & Run** tab.
-4. Ensure your student account is selected.
-5. Click **Deploy**. MetaMask will pop up for you to **Confirm** the transaction.
+## 4. Connect Remix IDE
+1. Open [Remix IDE](https://remix.ethereum.org/).
+2. Create a new file (e.g., `Lab1.sol`).
+3. In the left sidebar, click the **"Deploy & Run Transactions"** icon.
+4. Change the **Environment** dropdown to **"Injected Provider - MetaMask"**.
+5. MetaMask will pop up; select your student account and click **Connect**.
+
+---
+
+## 5. Deploy & Compile Settings
+1. **Solidity Compiler**: Use version `0.8.20` or higher. (Recommended pragma: `pragma solidity >=0.8.2 <0.9.0;`).
+2. **EVM Version**: The Imperial Lab supports the **Cancun** fork. You can leave the EVM version as `default`.
+3. **Deploy**: Ensure your student account (with balance) is selected, then click **Deploy**.
 
 ---
 
 ## 🔎 Troubleshooting
 
 ### ❌ Error: "Forbidden" or "Access Denied"
-**Cause**: Your student ID is currently "Blocked" or your MSSV in the RPC URL doesn't match your identity.
-**Fix**: Ensure your MetaMask RPC URL ends with your correct MSSV. If it's correct and still fails, contact your instructor to whitelist your account.
+**Cause**: Your student ID is currently "Blocked" or your MSSV in the RPC URL is wrong.
+**Fix**: Ensure your MetaMask RPC URL ends with your correct MSSV. If it's correct, ask your instructor to **Whitelist** your address.
 
-### ❌ Error: "Could not connect to the endpoint"
-**Cause**: Browser security or the API server is down.
-**Fix**: 
-1. Check if the portal at `http://localhost:5000/api/health` shows "UP".
-2. If using MetaMask, ensure no other VPN or Proxy is interfering with `localhost`.
-3. In some browsers, you may need to click the shield icon in the address bar and select **"Allow Insecure Content"** to allow the HTTPS Remix site to talk to the local HTTP gateway.
+### ❌ Stuck on "Creation of ... pending"
+**Cause**: Transaction Nonce Mismatch.
+**Fix**: Follow **Section 3** above to Clear Activity Tab Data in MetaMask.
+
+### ❌ Error: "Invalid Opcode"
+**Cause**: Using a Solidity version too new for the network.
+**Fix**: In Remix Compiler tab, change **EVM VERSION** to `shanghai` or `london` and re-compile.
 
 ---
 
 ## 📊 View Your Deployment
-Once deployed, copy your **Transaction Hash** from the MetaMask "Activity" tab or the Remix console and paste it into the [Lab Explorer](http://localhost:4000) to see your code permanently recorded on the Imperial ledger.
+Once deployed, copy your **Transaction Hash** and paste it into the [Lab Explorer](http://localhost:4000) to see your code permanently recorded on the Imperial ledger.

@@ -1,12 +1,15 @@
 {
   "config": {
     "chainId": 1337,
-    "petersburgblock": 0,
-    "istanbulblock": 0,
-    "berlinblock": 0,
-    "londonblock": 0,
-    "shanghaiblock": 0,
-    "cancunblock": 0,
+    "petersburgBlock": 0,
+    "istanbulBlock": 0,
+    "berlinBlock": 0,
+    "londonBlock": 0,
+    "parisBlock": 0,
+    "shanghaiBlock": 0,
+    "cancunBlock": 0,
+    "shanghaiTime": 0,
+    "cancunTime": 0,
     "qbft": {
       "blockperiodseconds": 2,
       "epochlength": 30000,
@@ -23,21 +26,6 @@
   "alloc": {
     "0x017A7BFB86bb217969D462b5C58EB7E951Ca5098": {
       "balance": "0x21e19e0c9bab2400000"
-    },
-    "0x538950c432cec7b89ba578ff81479c1d18aab52e": {
-      "balance": "0xad78ebc5ac6200000"
-    },
-    "0x7bceb4a042ca3e02f95ce7b716a29d6c41e4fe0f": {
-      "balance": "0xad78ebc5ac6200000"
-    },
-    "0x7f891ecbbc03ef9ea9198e94448caef3cac63aab": {
-      "balance": "0xad78ebc5ac6200000"
-    },
-    "0xd6c3f4194e1312a2d3593dd3e1c221b866597f7d": {
-      "balance": "0xad78ebc5ac6200000"
-    },
-    "0xfe3b557e8fb62b89f4916b721be55ceb828dbd73": {
-      "balance": "0xad78ebc5ac6200000"
     }
   }
 }
